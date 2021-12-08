@@ -1,21 +1,51 @@
-<script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
+<script>
+    import { ref, computed } from 'vue';
+    import { useRoute } from 'vue-router';
+    
+    export default {
+        name: 'App',
+        components: {
+
+        },
+        setup() {
+            const route = useRoute();
+            const viewName = ref('default');
+            const currentLocation = computed(() => {
+                const { matched, ...rest } = route;
+                return rest;
+            });
+
+            return {
+                currentLocation,
+                viewName
+            }
+        }
+    }
+</script> 
 
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + Vite" />
+    <Suspense>
+        <template #default>
+            <router-view :name="viewName" v-slot="{ Component, route }">
+                <keep-alive>
+                    <component
+                        :is="Component"
+                        :key="route.name === 'repeat' ? route.path : undefined"
+                    />
+                </keep-alive>
+            </router-view>
+        </template>
+        <template #fallback>Loading...</template>
+    </Suspense>
 </template>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+    #app {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        color: #2c3e50;
+        margin-top: 60px;
+    }
 </style>
