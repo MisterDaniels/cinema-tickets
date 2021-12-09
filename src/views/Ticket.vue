@@ -1,10 +1,15 @@
 <template>
-    <h1>Bem Vindo</h1>
+    <Countdown />
 </template>
 
 <script>
+    import Countdown from '../components/Countdown.vue';
+
     export default {
-        name: 'Ticket'
+        name: 'Ticket',
+        components: {
+            Countdown
+        }
     }
 </script>
 
